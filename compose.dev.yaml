@@ -1,0 +1,34 @@
+name: permuros
+
+services:
+  postgres:
+    image: docker.io/postgres:17-alpine
+    volumes:
+      - "./docker-store/postgres:/data"
+      - "./docker-store/data:/db"
+      - ".:/project"
+    environment:
+      PGDATA: /db
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  django:
+    build:
+      context: ./
+      dockerfile: "./docker/django/Dockerfile"
+    command: [ "/project/docker/django/run-dev.sh" ]
+    environment:
+      DJANGO_CONFIGURATION: Dev
+      DJANGO_STORE_PATH: /docker-store
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./:/project"
+      - "./docker-store/django:/store"
+    depends_on:
+      - postgres
