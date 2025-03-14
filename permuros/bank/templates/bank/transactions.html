@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static "bank/app.css" %}">
+{% endblock %}
+{% block body_class %}bank{% endblock %}
+
+{% block title %}Bank - PermurOS{% endblock %}
+
+{% block titlebar_title %}Bank{% endblock %}
+
+{% block content %}
+  <div class="summary">
+    <div class="balance">
+      <span>Balance</span>
+      <span class="balance_amount">{{ total }}</span>
+    </div>
+  </div>
+
+  <table class="transactions">
+
+  {% for transaction in transactions %}
+    <tr>
+      <td>
+        <div class="label">{{ transaction.label }}</div>
+        <div class="date">{{ transaction.date|date:"jS F Y" }}</div>
+      </td>
+      <td>{{ transaction.amount }}</td>
+    </tr>
+  {% endfor %}
+
+  </table>
+{% endblock %}

@@ -1,0 +1,65 @@
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+#toolbar {
+  background-color: var(--colour-fade5);
+  border-bottom: 1px solid var(--colour-fade20);
+  padding: 3px 0;
+  overflow: hidden;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+
+  span {
+    color: var(--colour-fade20);
+    margin: 0 0.25rem;
+  }
+
+  button {
+    padding: 0;
+    margin: 0 0.15rem;
+    border: 1px solid transparent;
+    background-color: transparent;
+
+    &:hover {
+      background-color: white;
+      border-color: var(--colour-fade30);
+    }
+
+    &.selected {
+      background-color: white;
+      border-color: var(--colour);
+    }
+  }
+
+  input[type="color"] {
+    appearance: none;
+    border: 0;
+    background-color: transparent;
+    width: var(--icon-size);
+    height: var(--icon-size);
+  }
+
+  input[type="text"] {
+    padding: 0 0.15rem;
+    font-size: 0.9rem;
+    width: 4ch;
+    text-align: center;
+  }
+
+  .icon {
+    background-color: var(--colour);
+  }
+}
+
+#canvasWrap {
+  overflow: scroll;
+  flex: 1 1 auto;
+}
+canvas {
+  border: 0;
+  cursor: crosshair;
+  display: block;
+}

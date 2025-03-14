@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+  <iframe
+    src="https://open.spotify.com/embed/playlist/6LZlE9PKoCv7ZiFjpCp8mh?utm_source=generator&theme=0"
+    width="100%"
+    height="100%"
+    frameBorder="0"
+    {# allowfullscreen="" #}
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  ></iframe>
+
+  <style>
+
+  main {
+    position: relative;
+  }
+  .cover {
+    position: absolute;
+    &.top {
+      background-color: #1f1f1f;
+
+      &.left {
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+      }
+
+      &.right {
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+      }
+
+      &.playlist-details {
+        top: 25px;
+        left: 200px;
+        height: 150px;
+        width: 300px;
+      }
+      &.more {
+        top: 135px;
+        right: 75px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    &.bottom {
+      background-color: #121212;
+
+      &.left,
+      &.right {
+        bottom: 0;
+        width: 20px;
+        height: 20px;
+      }
+      &.left {
+        left: 0;
+      }
+      &.right {
+        right: 0;
+      }
+    }
+
+    &.album-cover {
+      top: 0px;
+      left: 0px;
+      height: 200px;
+      width: 200px;
+    }
+  }
+  </style>
+  <div class="cover top left"></div>
+  <div class="cover top right"></div>
+  <div class="cover top x=playlist-details"></div>
+  <div class="cover top more"></div>
+  <div class="cover bottom left"></div>
+  <div class="cover bottom right"></div>
+
+  <div class="cover album-cover"></div>
+
+{% endblock %}

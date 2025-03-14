@@ -1,0 +1,16 @@
+<ul class="files">
+
+  {% for file in files %}
+    <li>
+      <a
+        hx-get="{% url "write:open" pk=file.pk %}"
+        hx-target="#titlebar_title"
+        hx-swap="innerHTML"
+      >
+        <h2>{{ file.title }}</h2>
+        <p>{{ file.modified|timesince }} ago</p>
+      </a>
+    </li>
+  {% endfor %}
+
+</ul>

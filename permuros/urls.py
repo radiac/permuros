@@ -17,10 +17,28 @@ Including another URLconf
 
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, URLResolver, include, path
+from django.views.generic import TemplateView
+
+from . import views
 
 urlpatterns: list[URLResolver | URLPattern] = [
     path("admin/", admin.site.urls),
+    path(
+        r"accounts/",
+        login_required(
+            TemplateView.as_view(
+                template_name="accounts/index.html",
+            )
+        ),
+    ),
+    path(r"accounts/", include("django.contrib.auth.urls")),
+    path("write/", include("permuros.write.urls", namespace="write")),
+    path("draw/", include("permuros.draw.urls", namespace="draw")),
+    path("spotify/", include("permuros.spotify.urls", namespace="spotify")),
+    path("bank/", include("permuros.bank.urls", namespace="bank")),
+    path("", views.home, name="home"),
 ]
 
 # Serve static files

@@ -1,0 +1,113 @@
+main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .player {
+    flex: 0 0 auto;
+    width: 100%;
+    background: linear-gradient(to bottom, var(--colour-fade92), var(--colour-fade90));
+    padding: calc(var(--gap) / 2);
+    display: flex;
+    gap: var(--gap);
+    justify-content: center;
+
+    .icon {
+      --icon-size: 48px;
+      background-color: var(--colour-fade30);
+      cursor: pointer;
+
+      &.previous {
+        mask-image: url("/static/icons/arrow-left-double.svg");
+      }
+      &.playToggle {
+        mask-image: url("/static/icons/play.svg");
+
+        &.playing {
+          mask-image: url("/static/icons/pause.svg");
+        }
+      }
+      &.next {
+        mask-image: url("/static/icons/arrow-right-double.svg");
+      }
+      &.repeat {
+        mask-image: url("/static/icons/repeat.svg");
+        &.repeat-off {
+          background-color: var(--colour-fade70);
+        }
+        &.repeat-context {
+        }
+        &.repeat-track {
+          mask-image: url("/static/icons/repeat-one.svg");
+        }
+      }
+
+      &:hover {
+        background-color: var(--colour-fade10);
+      }
+    }
+  }
+
+  .playlist {
+    --gap: 10px;
+    background: linear-gradient(to bottom, var(--colour-fade10), var(--colour-fade12));
+    list-style: none;
+    margin: 0;
+    padding: var(--gap);
+    flex: 1 1 auto;
+    overflow-y: auto;
+
+    li {
+      cursor: default;
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--gap);
+      padding: calc(var(--gap) / 2);
+      border-radius: 10px;
+
+      &.selected {
+        background-color: var(--colour-fade20);
+      }
+
+      &:hover {
+        background-color: var(--colour-fade5);
+      }
+
+      .art {
+        flex: 0 0 auto;
+
+        img {
+          width: 60px;
+          border-radius: 10px;
+        }
+      }
+
+      .details {
+        flex: 1 1 auto;
+
+        h3,
+        p {
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        h3 {
+          color: var(--colour);
+        }
+        p {
+          color: var(--colour-fade60);
+        }
+      }
+
+      .duration {
+        flex: 0 0 auto;
+        color: var(--colour-fade60);
+        margin-right: var(--gap);
+      }
+    }
+  }
+}

@@ -17,7 +17,8 @@ from configurations import Configuration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-STORE_PATH = Path(environ.get("DJANGO_STORE_PATH", BASE_DIR.parent / "store"))
+STORE_PATH = Path(environ.get("DJANGO_STORE_PATH", "local"))
+STORE_PATH.mkdir(parents=True, exist_ok=True)
 
 
 class Common(Configuration):
@@ -37,6 +38,12 @@ class Common(Configuration):
         "django.contrib.postgres",
         "compressor",
         # Project:
+        "permuros",
+        "permuros.accounts",
+        "permuros.write",
+        "permuros.draw",
+        "permuros.spotify",
+        "permuros.bank",
     ]
 
     MIDDLEWARE = [
@@ -85,7 +92,6 @@ class Common(Configuration):
 
     # Password validation
     # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
     AUTH_PASSWORD_VALIDATORS = [
         {
             "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -100,6 +106,8 @@ class Common(Configuration):
             "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
         },
     ]
+    SESSION_COOKIE_AGE = 315360000  # 10 years
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
     # Internationalization
     # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -136,6 +144,9 @@ class Common(Configuration):
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+    SPOTIFY_CLIENT_ID = environ.get("DJANGO_SPOTIFY_CLIENT_ID")
+    SPOTIFY_CLIENT_SECRET = environ.get("DJANGO_SPOTIFY_CLIENT_SECRET")
+
 
 class Dev(Common):
     DEBUG = True
@@ -144,6 +155,7 @@ class Dev(Common):
     # E-mail to file
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = STORE_PATH / "tmp" / "emails"
+    EMAIL_FILE_PATH.mkdir(parents=True, exist_ok=True)
 
     INSTALLED_APPS = (
         [
@@ -158,6 +170,19 @@ class Dev(Common):
     MIDDLEWARE = Common.MIDDLEWARE + [
         "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
+
+
+class Local(Dev):
+    """
+    Running outside a docker container
+    """
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": STORE_PATH / "db.sqlite3",
+        }
+    }
 
 
 class Test(Common):

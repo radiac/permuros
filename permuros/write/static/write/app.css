@@ -1,0 +1,48 @@
+.ck-container {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ck-container,
+.ck-dropdown {
+  /* Reset global styles so they don't interfere */
+  button,
+  .button,
+  input[type="submit"],
+  input[type="reset"] {
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.ck-content {
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.ck.ck-editor,
+.editor-container,
+.editor-container_classic-editor .editor-container__editor {
+  width: 100%;
+  height: 100%;
+}
+
+.ck.ck-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.ck-editor__main {
+  flex: 1 1 auto;
+}
+
+.ck-editor__editable {
+  height: 100%;
+}
+
+.ck-focused {
+  border-color: transparent !important;
+}

@@ -1,0 +1,14 @@
+[Unit]
+Description=Chromium Kiosk
+Wants=default.target
+After=default.target
+
+[Service]
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/USER/.Xauthority
+Type=simple
+ExecStart=/bin/bash /home/USER/local/kiosk.sh
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static "vendor/ckeditor5/ckeditor5.css" %}">
+  <link rel="stylesheet" href="{% static "write/app.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+  <script type="importmap">
+  {
+    "imports": {
+      "ckeditor5": "/static/vendor/ckeditor5/ckeditor5.js",
+      "ckeditor5/": "/static/vendor/ckeditor5/"
+    }
+  }
+  </script>
+  <script type="module" src="{% static "write/app.js" %}"></script>
+{% endblock %}
+
+{% block body_class %}write{% endblock %}
+
+{% block content %}
+  <div class="ck-container">
+    <div class="editor-container editor-container_classic-editor" id="editor-container">
+      <div class="editor-container__editor"><div id="editor"></div></div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block titlebar_title %}
+  {% include "write/includes/titlebar.html" %}
+{% endblock %}
+
+{% block sidebar_checkbox %} checked{% endblock %}
+
+
+{% block sidebar_action %}
+  <a href="{% url "write:app" %}">
+    <div class="icon" style="mask-image: url('{% static "icons/new-file.svg" %}')"></div>
+    <div>New file</div>
+  </a>
+{% endblock %}
+
+{% block sidebar_content %}
+  {% include "write/includes/sidebar.html" %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block body_class %}home{% endblock %}
+
+{% block content %}
+  <ul class="cards">
+
+    <li>
+      <a href="{% url "write:app" %}">
+        <div class="icon" style="mask-image: url('/static/icons/apps/write.svg')"></div>
+        <p>Write</p>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url "draw:app" %}">
+        <div class="icon" style="mask-image: url('/static/icons/apps/draw.svg')"></div>
+        <p>Draw</p>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url "spotify:login" %}">
+        <div class="icon" style="mask-image: url('/static/icons/apps/spotify.svg')"></div>
+        <p>Spotify</p>
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url "bank:transactions" %}">
+        <div class="icon" style="mask-image: url('/static/icons/apps/bank.svg')"></div>
+        <p>Bank</p>
+      </a>
+    </li>
+
+  </ul>
+{% endblock %}

@@ -1,0 +1,11 @@
+Write:
+<form
+  id="editorForm"
+  hx-post="{% url "write:save" %}"
+  hx-target="#titlebar_title"
+  hx-swap="innerHTML"
+>
+  <input type="hidden" name="pk" value="{{ file.pk }}">
+  <input type="text" name="title" placeholder="Set a title here" value="{{ file.title }}" maxlength="100" required>
+  <input type="hidden" name="content" id="editorContent">
+</form>

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static "draw/app.css" %}">
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static "draw/app.js" %}"></script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    window.board = new Board(document.getElementById("canvas"), document.getElementById('toolbar'));
+  });
+  </script>
+{% endblock %}
+
+{% block body_class %}draw{% endblock %}
+
+
+{% block titlebar_title %}
+  {% include "draw/includes/titlebar.html" %}
+{% endblock %}
+
+{% block sidebar_checkbox %} checked{% endblock %}
+
+{% block sidebar_action %}
+  <a href="{% url "draw:app" %}">
+    <div class="icon" style="mask-image: url('{% static "icons/new-file.svg" %}')"></div>
+    <div>New file</div>
+  </a>
+{% endblock %}
+
+{% block sidebar_content %}
+  {% include "draw/includes/sidebar.html" %}
+{% endblock %}
+
+
+{% block content %}
+  <div id="toolbar">
+    <button id="toolbar-save"><div class="icon" style="mask-image: url('/static/icons/save.svg')"></div></button>
+    <button id="toolbar-print"><div class="icon" style="mask-image: url('/static/icons/printer.svg')"></div></button>
+    <span>|</span>
+    <button id="toolbar-draw" class="tool"><div class="icon" style="mask-image: url('/static/icons/pencil.svg')"></div></button>
+    <button id="toolbar-fill" class="tool"><div class="icon" style="mask-image: url('/static/icons/paint.svg')"></div></button>
+    <span>|</span>
+    <input type="color" id="toolbar-colour" value="#000000">
+    <span>|</span>
+    <input type="range" id="toolbar-lineWidthSlider" min="1" max="30" step="1">
+    <input type="text" id="toolbar-lineWidth" value="5" maxlength="2">
+
+  </div>
+  <div id="canvasWrap">
+    <canvas id="canvas"></canvas>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "spotify/base.html" %}
+{% load static %}
+
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static "spotify/player.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div class="player">
+      <button class="icon previous"></button>
+      <button class="icon playToggle"></button>
+      <button class="icon next"></button>
+      <button class="icon repeat"></button>
+      {% if request.user.is_superuser %}
+        <a href="{% url "spotify:settings" %}" class="icon settings"></a>
+      {% endif %}
+    </div>
+
+    <ul class="playlist">
+      {% for track in tracks %}
+        <li data-track-id="{{ track.id }}">
+          <div class="art">
+            <img src="{{ track.image }}">
+          </div>
+          <div class="details">
+            <h3>{{ track.name }}</h3>
+            <p>{{ track.artists|join:", " }}</p>
+          </div>
+          <div class="duration">
+            {{ track.duration }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
+
+
+{% block extra_js %}
+  {{ player_settings|json_script:"player-settings" }}
+  <script src="{% static "spotify/player.js" %}"></script>
+{% endblock %}

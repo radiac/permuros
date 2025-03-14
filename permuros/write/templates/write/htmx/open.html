@@ -1,0 +1,12 @@
+{% include "write/includes/titlebar.html" %}
+
+{{ file.content|json_script:"editor-content" }}
+
+<script>
+(() => {
+  const newContent = JSON.parse(document.getElementById('editor-content').textContent);
+  editor.permuros_loading = true;
+  editor.permuros_saved = true;
+  editor.setData(newContent);
+})();
+</script>

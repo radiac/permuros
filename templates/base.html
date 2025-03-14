@@ -1,0 +1,64 @@
+{% load static compress %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}PermurOS{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% compress css %}
+  <link rel="stylesheet" href="{% static "reset.css" %}">
+  <link rel="stylesheet" href="{% static "site.css" %}">
+  {% endcompress %}
+  {% block extra_css %}
+  {% endblock %}
+
+  {% block extra_head %}
+  {% endblock %}
+</head>
+<body
+  class="{% block body_class %}{% endblock %}"
+  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+>
+
+<header id="titlebar">
+  {% block titlebar %}
+    <label for="sidebar_toggle" class="sidebar_toggle"><div class="icon"></div></label>
+    <h1 id="titlebar_title">
+      {% block titlebar_title %}PermurOS{% endblock %}
+    </h1>
+    <a href="/" id="titlebar_close" class="icon"></a>
+  {% endblock %}
+</header>
+
+<aside id="sidebar">
+  {% block sidebar %}
+    <header>
+      <div id="sidebar_action">
+        {% block sidebar_action %}{% endblock %}
+      </div>
+      <input type="checkbox" id="sidebar_toggle"{% block sidebar_checkbox %}{% endblock %}>
+      <label for="sidebar_toggle" class="sidebar_toggle"><div class="icon"></div></label>
+    </header>
+
+    <section id="sidebar_content">{% block sidebar_content %}{% endblock %}</section>
+
+  {% endblock %}
+</aside>
+
+<main id="content"{% block "extra_main" %}{% endblock %}>
+  {% block content_con %}
+    {% block content %}
+    {% endblock %}
+  {% endblock %}
+</main>
+
+{% block end_body %}{% endblock %}
+  {% compress js %}
+  <script src="{% static "vendor/htmx.min.js" async></script>
+  <script src="{% static "site.js" %}" async></script>
+  {% endcompress %}
+  {% block extra_js %}
+  {% endblock %}
+
+</body>
+</html>

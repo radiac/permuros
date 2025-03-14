@@ -1,0 +1,33 @@
+{% extends "spotify/base.html" %}
+
+{% block content %}
+
+  <article>
+    <h1>Settings</h1>
+
+    <form action="." method="post">
+    {% csrf_token %}
+
+    <h2>Playlists</h2>
+    <ul>
+      {% for playlist in playlists %}
+        <li>
+          <label><input type="radio" name="playlist_id" value="{{ playlist.id }}" required>{{ playlist.name }}</label>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h2>Devices</h2>
+    <ul>
+      {% for device in devices %}
+        <li>
+          <label><input type="radio" name="device_name" value="{{ device.name }}" required>{{ device.name }}</label>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <input type="submit" value="Save">
+    </form>
+  </article>
+
+{% endblock %}

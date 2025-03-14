@@ -1,0 +1,13 @@
+Draw:
+<form
+  id="drawForm"
+  hx-post="{% url "draw:save" %}"
+  hx-target="#titlebar_title"
+  hx-swap="innerHTML"
+>
+  <input type="hidden" name="pk" value="{{ image.pk }}">
+  <input type="text" name="title" placeholder="Set a title here" value="{{ image.title }}" maxlength="100" required>
+  <input type="hidden" name="image_data" id="drawImageData">
+  <input type="hidden" name="width" id="drawWidth">
+  <input type="hidden" name="height" id="drawHeight">
+</form>

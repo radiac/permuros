@@ -1,0 +1,16 @@
+<ul class="files">
+
+  {% for image in images %}
+    <li>
+      <a
+        hx-get="{% url "draw:open" pk=image.pk %}"
+        hx-target="#titlebar_title"
+        hx-swap="innerHTML"
+      >
+        <h2>{{ image.title }}</h2>
+        <p>{{ image.modified|timesince }} ago</p>
+      </a>
+    </li>
+  {% endfor %}
+
+</ul>

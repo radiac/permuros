@@ -1,0 +1,60 @@
+body.bank {
+  --max-width: 600px;
+
+  .summary {
+    background-color: var(--colour-fade10);
+    position: sticky;
+    top: 0;
+
+    .balance {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+
+      font-size: 1.3rem;
+      padding: var(--gap);
+      color: var(--colour);
+      align-items: center;
+
+      .balance_amount {
+        font-size: 2rem;
+        margin-left: auto;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    border-collapse: collapse;
+    margin-bottom: var(--gap);
+
+    tr:nth-child(2n) {
+      background-color: var(--colour-fade5);
+    }
+
+    td {
+      padding: 1rem var(--gap);
+
+      &:first-child {
+        width: 15rem;
+        color: var(--colour);
+
+        .label {
+          font-size: 1.2rem;
+        }
+        .date {
+          color: var(--colour-fade50);
+          font-size: 0.8rem;
+        }
+      }
+      &:last-child {
+        width: 15rem;
+        text-align: right;
+        font-size: 2rem;
+        color: var(--colour-fade80);
+      }
+    }
+  }
+}

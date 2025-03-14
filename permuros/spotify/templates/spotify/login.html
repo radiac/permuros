@@ -1,0 +1,17 @@
+{% extends "spotify/base.html" %}
+
+{% block content %}
+  <div class="dialog">
+    {% if error %}
+      <div class="error">
+        <h2>A problem occurred</h2>
+        <p>{{ error }}</p>
+      </div>
+    {% endif %}
+
+    <form action="." method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Log in to Spotify">
+    </form>
+  </div>
+{% endblock %}

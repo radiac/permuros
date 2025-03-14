@@ -1,0 +1,10 @@
+{% include "draw/includes/titlebar.html" %}
+
+{{ image.as_dict|json_script:"draw-content" }}
+
+<script>
+(() => {
+  const imgData = JSON.parse(document.getElementById('draw-content').textContent);
+  board.load(imgData.url, imgData.width, imgData.height);
+})();
+</script>

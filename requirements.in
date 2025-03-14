@@ -27,3 +27,6 @@ pytest-django
 # Deployment
 gunicorn
 sentry-sdk
+
+# Project
+requests
