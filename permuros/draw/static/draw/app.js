@@ -37,6 +37,8 @@ class Tool {
     this.board = board;
   }
 
+  activate(point) {}
+  deactivate(point) {}
   mousedown(point) {}
   mouseup(point) {}
   mousemove(point) {}
@@ -53,8 +55,12 @@ class DrawTool extends Tool {
     this.last = point;
   }
   mouseup(point) {
+    if (!this.drawing) {
+      return;
+    }
     this.drawing = false;
     this.board.ctx.beginPath();
+    this.board.snapshot();
   }
   mousemove(point) {
     if (!this.drawing) return;
@@ -73,6 +79,16 @@ class DrawTool extends Tool {
     this.last = point;
   }
 }
+
+class EraseTool extends DrawTool {
+  activate() {
+    this.board.ctx.globalCompositeOperation = "destination-out";
+  }
+  deactivate() {
+    this.board.ctx.globalCompositeOperation = "source-over";
+  }
+}
+
 class FillTool extends Tool {
   mousedown(point) {
     fill(
@@ -81,6 +97,7 @@ class FillTool extends Tool {
       point,
       Colour.fromHex(this.board.toolbar.colour)
     );
+    this.board.snapshot();
   }
 }
 
@@ -99,19 +116,30 @@ class Toolbar {
       this.lineWidthEl.value = this.lineWidthSliderEl.value;
     };
 
-    this.drawEl = document.getElementById("toolbar-draw");
-    this.fillEl = document.getElementById("toolbar-fill");
-
-    this.drawEl.addEventListener("click", (e) => this.selectDrawTool());
-    this.fillEl.addEventListener("click", (e) => this.selectFillTool());
-    this.selectDrawTool();
-
     document
       .getElementById("toolbar-save")
       .addEventListener("click", (e) => this.board.save());
     document
       .getElementById("toolbar-print")
       .addEventListener("click", (e) => this.board.print());
+
+    document
+      .getElementById("toolbar-undo")
+      .addEventListener("click", (e) => this.board.undo());
+    document
+      .getElementById("toolbar-redo")
+      .addEventListener("click", (e) => this.board.redo());
+
+    this.drawEl = document.getElementById("toolbar-draw");
+    this.drawEl.addEventListener("click", (e) => this.selectDrawTool());
+
+    this.fillEl = document.getElementById("toolbar-fill");
+    this.fillEl.addEventListener("click", (e) => this.selectFillTool());
+
+    this.eraseEl = document.getElementById("toolbar-erase");
+    this.eraseEl.addEventListener("click", (e) => this.selectEraseTool());
+
+    this.selectDrawTool();
 
     document.body.addEventListener("htmx:beforeRequest", (e) => this.board.close(e));
     window.addEventListener("beforeunload", (e) => this.board.close(e));
@@ -121,14 +149,22 @@ class Toolbar {
     this.board.setTool(DrawTool);
     this.selectToolButton(this.drawEl);
     this.showLineWidth();
+    this.showColour();
   }
   selectFillTool() {
     this.board.setTool(FillTool);
     this.selectToolButton(this.fillEl);
     this.hideLineWidth();
+    this.showColour();
+  }
+  selectEraseTool(active = null) {
+    this.board.setTool(EraseTool);
+    this.selectToolButton(this.eraseEl);
+    this.showLineWidth();
+    this.hideColour();
   }
   selectToolButton(el) {
-    for (const button of [this.drawEl, this.fillEl]) {
+    for (const button of [this.drawEl, this.fillEl, this.eraseEl]) {
       button.classList.toggle("selected", button == el);
     }
   }
@@ -166,13 +202,22 @@ class Toolbar {
     this.lineWidthEl.style.display = "none";
     this.lineWidthSliderEl.style.display = "none";
   }
+
+  showColour() {
+    this.colourEl.style.display = "inline-block";
+  }
+  hideColour() {
+    this.colourEl.style.display = "none";
+  }
 }
 
 class Board {
   constructor(el, toolbarEl) {
-    this.saved = true;
     this.el = this.canvas = el;
     this.ctx = this.el.getContext("2d");
+    this.saved = true;
+    this.history = [];
+    this.historyRedo = [];
 
     this.toolbar = new Toolbar(this, toolbarEl);
 
@@ -189,7 +234,11 @@ class Board {
   }
 
   setTool(toolCls) {
+    if (this.tool) {
+      this.tool.deactivate();
+    }
     this.tool = new toolCls(this);
+    this.tool.activate();
   }
 
   resize() {
@@ -237,17 +286,28 @@ class Board {
     document.getElementById("drawHeight").value = this.canvas.height;
     htmx.trigger(document.getElementById("drawForm"), "submit");
   }
+
   load(url, width, height) {
-    const img = new Image();
     this.canvas.width = width;
     this.canvas.height = height;
-    img.onload = () => {
-      this.ctx.clearRect(0, 0, width, height);
-      this.ctx.drawImage(img, 0, 0);
-    };
-    img.src = url;
+    this.ctx.clearRect(0, 0, width, height);
     this.saved = true;
+    this.drawSrc(url, 0, 0);
   }
+
+  /**
+   * Draw an image src onto the canvas - does not clear first
+   */
+  drawSrc(src, x, y) {
+    const img = new Image();
+    img.onload = () => {
+      requestAnimationFrame(() => {
+        this.ctx.drawImage(img, x, y);
+      });
+    };
+    img.src = src;
+  }
+
   print() {
     const dataUrl = canvas.toDataURL();
     const printWindow = window.open("", "_blank");
@@ -280,6 +340,43 @@ class Board {
       event.preventDefault();
     }
     return confirmed;
+  }
+
+  snapshot() {
+    requestAnimationFrame(() => {
+      this.history.push(this.canvas.toDataURL());
+      this.historyRedo.length = 0;
+    });
+  }
+
+  undo() {
+    if (this.history.length > 0) {
+      // Move latest change onto the redo pile
+      const current = this.history.pop();
+      this.historyRedo.push(current);
+    }
+
+    // Whatever happens, we want to clear the canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (this.history.length > 0) {
+      // Restore top of history
+      const snapshot = this.history[this.history.length - 1];
+      this.drawSrc(snapshot, 0, 0);
+    }
+  }
+  redo() {
+    if (this.historyRedo.length == 0) {
+      return;
+    }
+
+    // Move from redo to history
+    const snapshot = this.historyRedo.pop();
+    this.history.push(snapshot);
+
+    // Apply to canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.drawSrc(snapshot, 0, 0);
   }
 }
 

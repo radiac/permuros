@@ -108,3 +108,7 @@ The project is configured to use `pytest`:
 ```bash
 pytest
 ```
+
+## Credits
+
+Icons from [Remix Icon](https://remixicon.com/)

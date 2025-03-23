@@ -78,7 +78,7 @@ class SaveView(DrawMixin, TemplateView):
             image_file = ContentFile(image_data, name="image.png")
 
             # Save the image to your model
-            slug = slugify(form.cleaned_data["title"])[:-20]
+            slug = slugify(form.cleaned_data["title"])[:20]
             filename = f"{timezone.now().strftime('%Y-%m-%d')}-{slug}.png"
             image = form.save(commit=False)
             image.file.save(

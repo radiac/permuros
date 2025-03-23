@@ -168,7 +168,7 @@ class Dev(Common):
     )
 
     MIDDLEWARE = Common.MIDDLEWARE + [
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
+        "permuros.accounts.middleware.UserBrowserReloadMiddleware",
     ]
 
 
